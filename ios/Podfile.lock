@@ -16,12 +16,12 @@ PODS:
     - Flutter
   - record_ios (1.1.0):
     - Flutter
-  - runanywhere (0.15.9):
+  - runanywhere (0.15.11):
     - Flutter
-  - runanywhere_llamacpp (0.15.9):
+  - runanywhere_llamacpp (0.15.11):
     - Flutter
     - runanywhere
-  - runanywhere_onnx (0.15.9):
+  - runanywhere_onnx (0.15.11):
     - Flutter
     - runanywhere
   - shared_preferences_foundation (0.0.1):
@@ -83,12 +83,12 @@ SPEC CHECKSUMS:
   path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   record_ios: f75fa1d57f840012775c0e93a38a7f3ceea1a374
-  runanywhere: 21ca431beadf0ef864a82e1b2218cfa94bcab6c8
-  runanywhere_llamacpp: a6ca257f0c66cfd00adc85fb2c2867c0b6eddc67
-  runanywhere_onnx: 10492f237e764c6ef887a297e7df5968ab66e3c6
+  runanywhere: 1b7332924b1a8c1257b1c2ba00cdfcdb0849b793
+  runanywhere_llamacpp: f86c019dedf6f008d5e147b1e4cdacc064f7df13
+  runanywhere_onnx: 32cd3a3d4f6a77f382f1198f6d4f7527a963368c
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
 
-PODFILE CHECKSUM: 99534f57bef85eeb3b29c18ad0330b6dd50370a4
+PODFILE CHECKSUM: 8db6482529834c329ca57f3fd7cfd772be2ea7bd
 
 COCOAPODS: 1.16.2
