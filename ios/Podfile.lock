@@ -16,12 +16,12 @@ PODS:
     - Flutter
   - record_ios (1.1.0):
     - Flutter
-  - runanywhere (0.15.11):
+  - runanywhere (0.16.0):
     - Flutter
-  - runanywhere_llamacpp (0.15.11):
+  - runanywhere_llamacpp (0.16.0):
     - Flutter
     - runanywhere
-  - runanywhere_onnx (0.15.11):
+  - runanywhere_onnx (0.16.0):
     - Flutter
     - runanywhere
   - shared_preferences_foundation (0.0.1):
@@ -83,9 +83,9 @@ SPEC CHECKSUMS:
   path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   record_ios: f75fa1d57f840012775c0e93a38a7f3ceea1a374
-  runanywhere: 1b7332924b1a8c1257b1c2ba00cdfcdb0849b793
-  runanywhere_llamacpp: f86c019dedf6f008d5e147b1e4cdacc064f7df13
-  runanywhere_onnx: 32cd3a3d4f6a77f382f1198f6d4f7527a963368c
+  runanywhere: 5527ca8ae40ff60c1025e63e8068b2ebf06a572a
+  runanywhere_llamacpp: 47a8821209d4920622f0995b4a0077fc77dbfbf3
+  runanywhere_onnx: 99b899de50eb62ad171053451c5277b3882bcca6
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
 
