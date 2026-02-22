@@ -1,0 +1,31 @@
+{
+  "name": "offline-meeting-assistant",
+  "version": "1.0.0",
+  "description": "Fully offline meeting assistant with on-device AI transcription and summarization",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "ai",
+    "meeting",
+    "transcription",
+    "offline",
+    "privacy",
+    "speech-to-text",
+    "summarization",
+    "on-device"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@runanywhere/web": "^0.1.0-beta.9",
+    "@runanywhere/web-llamacpp": "^0.1.0-beta.9",
+    "@runanywhere/web-onnx": "^0.1.0-beta.9"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

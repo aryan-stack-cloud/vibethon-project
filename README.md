@@ -1,185 +1,406 @@
-# RunAnywhere Flutter Starter App
+# Offline Meeting Assistant
 
-A comprehensive starter app demonstrating the capabilities of the [RunAnywhere SDK](https://pub.dev/packages/runanywhere) - a privacy-first, on-device AI SDK for Flutter.
-
-![RunAnywhere](https://img.shields.io/badge/RunAnywhere-0.15.8-00D9FF)
-![Flutter](https://img.shields.io/badge/Flutter-3.10+-02569B)
-![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20Android-green)
+A fully offline-capable meeting assistant web application that uses on-device AI for speech-to-text transcription and meeting summarization. Your data never leaves your device.
 
 ## Features
 
-This starter app showcases four main capabilities of the RunAnywhere SDK:
+- **🎤 Audio Recording:** Record meeting conversations directly from your microphone
+- **📝 Speech-to-Text:** Transcribe audio using on-device Whisper models (via RunAnywhere STT)
+- **✨ AI Summarization:** Generate concise summaries and extract action items using on-device LLM
+- **🔒 100% Private:** All processing happens in your browser - no data ever leaves your device
+- **📴 Offline Ready:** After initial model download, works completely offline
+- **💾 Save Results:** Export transcripts and summaries as text files
+- **📋 Copy to Clipboard:** Easily copy transcripts and summaries
 
-### 💬 Chat (LLM Text Generation)
-- Streaming text generation with token-by-token output
-- Performance metrics (tokens/second, total tokens)
-- Cancel generation mid-stream
-- Suggested prompts for quick testing
+## Technical Stack
 
-### 🎤 Speech-to-Text (STT)
-- Real-time audio recording
-- On-device transcription using Whisper models
-- Audio level visualization
-- Transcription history
+- **Frontend:** Pure HTML5, CSS3, and Vanilla JavaScript (ES6 modules)
+- **AI SDK:** RunAnywhere Web SDK (@runanywhere/web)
+- **STT Model:** Whisper-tiny (~75MB)
+- **LLM Model:** Qwen2.5-0.5B-Instruct (~350MB)
+- **Build Tool:** Vite
+- **Storage:** OPFS (Origin Private File System) for model caching
 
-### 🔊 Text-to-Speech (TTS)
-- Neural voice synthesis with Kokoro
-- Adjustable speech rate
-- Sample texts for quick testing
-- Audio playback controls
+## System Requirements
 
-### 🤖 Voice Pipeline
-- Full voice assistant experience
-- Seamless integration: Speak → Transcribe → Generate → Speak
-- Real-time status updates
-- Conversation history
+### Browser Requirements
 
-## Getting Started
+| Browser | Minimum Version | Status |
+|---------|----------------|--------|
+| Chrome/Edge | 96+ | ✅ Fully Supported |
+| Firefox | 119+ | ✅ Supported (no WebGPU) |
+| Safari | 17+ | ⚠️ Limited (OPFS issues) |
 
-### Prerequisites
+### Required Browser Features
+- ✅ WebAssembly support
+- ✅ OPFS (Origin Private File System)
+- ✅ MediaRecorder API
+- ⚠️ SharedArrayBuffer (recommended for better performance)
 
-- Flutter 3.10 or higher
-- iOS 13.0+ or Android API 24+
-- Xcode (for iOS development)
-- Android Studio (for Android development)
+### Hardware Requirements
+- **RAM:** Minimum 2GB, Recommended 4GB+
+- **Storage:** ~500MB free space for models
+- **Internet:** Required only for initial model download
 
-### Installation
+## Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/RunanywhereAI/flutter-starter-example.git
-   cd flutter-starter-example
-   ```
+### 1. Clone or Download
 
-2. **Install dependencies**
-   ```bash
-   flutter pub get
-   ```
-
-3. **Run the app**
-   ```bash
-   flutter run
-   ```
-
-### iOS Setup
-
-Add the following to your `ios/Runner/Info.plist` for microphone access:
-
-```xml
-<key>NSMicrophoneUsageDescription</key>
-<string>This app needs microphone access for speech recognition</string>
+```bash
+cd offline-meeting-assistant
 ```
 
-### Android Setup
+### 2. Install Dependencies
 
-Add the following permissions to `android/app/src/main/AndroidManifest.xml`:
-
-```xml
-<uses-permission android:name="android.permission.RECORD_AUDIO" />
-<uses-permission android:name="android.permission.INTERNET" />
+```bash
+npm install
 ```
 
-## Architecture
+This will install:
+- `@runanywhere/web` - RunAnywhere Web SDK
+- `vite` - Development server and build tool
 
-```
-lib/
-├── main.dart                 # App entry point & SDK initialization
-├── services/
-│   └── model_service.dart    # Model management (download, load, state)
-├── theme/
-│   └── app_theme.dart        # Custom dark theme with accent colors
-├── views/
-│   ├── home_view.dart        # Main navigation screen
-│   ├── chat_view.dart        # LLM chat interface
-│   ├── speech_to_text_view.dart  # STT interface
-│   ├── text_to_speech_view.dart  # TTS interface
-│   └── voice_pipeline_view.dart  # Voice agent interface
-└── widgets/
-    ├── feature_card.dart     # Home screen feature cards
-    ├── model_loader_widget.dart  # Model download/load UI
-    ├── chat_message_bubble.dart  # Chat message UI
-    └── audio_visualizer.dart     # Audio level visualization
+### 3. Start Development Server
+
+```bash
+npm run dev
 ```
 
-## SDK Packages
+The app will automatically open in your browser at `http://localhost:3000`
 
-This app uses three RunAnywhere packages:
+### 4. Build for Production
 
-| Package | Purpose | Pub.dev |
-|---------|---------|---------|
-| `runanywhere` | Core SDK with infrastructure | [pub.dev/packages/runanywhere](https://pub.dev/packages/runanywhere) |
-| `runanywhere_llamacpp` | LLM backend (LlamaCpp) | [pub.dev/packages/runanywhere_llamacpp](https://pub.dev/packages/runanywhere_llamacpp) |
-| `runanywhere_onnx` | STT/TTS/VAD backend (ONNX) | [pub.dev/packages/runanywhere_onnx](https://pub.dev/packages/runanywhere_onnx) |
-
-## Default Models
-
-The app comes preconfigured with these models:
-
-| Model | Purpose | Size |
-|-------|---------|------|
-| SmolLM2 360M Q8_0 | Text generation | ~400MB |
-| Sherpa ONNX Whisper Tiny EN | Speech recognition | ~80MB |
-| Kokoro EN v0.19 | Voice synthesis | ~100MB |
-
-## Customization
-
-### Using Different Models
-
-You can modify `lib/services/model_service.dart` to use different models:
-
-```dart
-// LLM Model - Example with a larger model
-LlamaCpp.addModel(
-  id: 'qwen2-1.5b-q4',
-  name: 'Qwen2 1.5B Q4',
-  url: 'https://huggingface.co/...',
-  memoryRequirement: 1500000000,
-);
-
-// STT Model - Example with multilingual support
-Onnx.addModel(
-  id: 'whisper-small-multi',
-  name: 'Whisper Small Multilingual',
-  url: 'https://...',
-  modality: ModelCategory.speechRecognition,
-);
+```bash
+npm run build
 ```
 
-### Theming
+The optimized production build will be in the `dist/` folder.
 
-The app uses a custom dark theme defined in `lib/theme/app_theme.dart`. You can customize:
+### 5. Preview Production Build
 
-- `AppColors` - Color palette with accent colors
-- `AppTheme.darkTheme` - Complete Material theme
+```bash
+npm run preview
+```
 
-## Privacy
+## First Run Setup
 
-All AI processing happens **on-device**. No data is sent to external servers. The models are downloaded once and stored locally on the device.
+### Model Download
+
+On first run, the app will download two AI models:
+
+1. **STT Model (Whisper-tiny):** ~75MB
+2. **LLM Model (Qwen2.5-0.5B-Instruct):** ~350MB
+
+**Total Download:** ~425MB
+
+These models are cached in your browser's OPFS and only need to be downloaded once. After caching, the app works completely offline.
+
+### Progress Tracking
+
+The UI shows real-time download progress with:
+- Percentage complete
+- Downloaded MB / Total MB
+- Estimated time remaining
+
+## Usage Guide
+
+### Recording a Meeting
+
+1. **Grant Microphone Permission:** Click "Allow" when prompted
+2. **Start Recording:** Click the "🎙️ Start Recording" button
+3. **Speak Naturally:** The app records for up to 30 minutes
+4. **Stop Recording:** Click "⏹️ Stop Recording" when done
+
+### Viewing Results
+
+After stopping the recording:
+
+1. **Transcription:** The app automatically transcribes your audio
+2. **Summarization:** AI generates a summary and extracts action items
+3. **Review:** Check the transcript and summary for accuracy
+
+### Saving Results
+
+- **Save as File:** Click "💾 Save Results" to download a text file
+- **Copy Transcript:** Click 📋 next to the transcript section
+- **Copy Summary:** Click 📋 next to the summary section
+
+### Starting Over
+
+Click "🎙️ New Recording" to reset and start a fresh recording session.
+
+## Offline Usage
+
+### Testing Offline Functionality
+
+1. **First Run:** Complete the initial model download with internet connected
+2. **Wait for "Offline Ready":** Ensure status shows "✓ Offline Ready"
+3. **Disconnect Internet:** Turn off Wi-Fi or unplug ethernet
+4. **Test Recording:** Make a test recording - it should work perfectly!
+
+### Verifying Offline Status
+
+Look for these indicators:
+- ✅ "Models: ✓ Offline Ready" in the control panel
+- ✅ No network requests in browser DevTools
+- ✅ Models cached in OPFS
+
+## Project Structure
+
+```
+offline-meeting-assistant/
+├── index.html          # Main HTML structure
+├── style.css           # Complete styling
+├── script.js           # Application logic and SDK integration
+├── vite.config.js      # Vite configuration (WASM + COOP/COEP headers)
+├── package.json        # Dependencies and scripts
+└── README.md           # This file
+```
+
+## Configuration
+
+### Cross-Origin Isolation
+
+For optimal performance (multi-threaded WASM), the app requires Cross-Origin Isolation headers:
+
+```
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Embedder-Policy: credentialless
+```
+
+These are automatically configured in `vite.config.js` for the development server.
+
+### Recording Duration Limit
+
+Default: 30 minutes
+
+To change, edit `MAX_RECORDING_DURATION_MS` in `script.js`:
+
+```javascript
+const MAX_RECORDING_DURATION_MS = 30 * 60 * 1000; // 30 minutes in milliseconds
+```
+
+### Audio Settings
+
+Audio is recorded at:
+- **Sample Rate:** 16kHz (required for Whisper)
+- **Channels:** Mono (1 channel)
+- **Echo Cancellation:** Enabled
+- **Noise Suppression:** Enabled
 
 ## Troubleshooting
 
-### Models not downloading
-- Check your internet connection
-- Ensure sufficient storage space (models can be 100MB-1GB)
-- Check iOS/Android permissions
+### "Browser does not support OPFS"
 
-### Microphone not working
-- Grant microphone permission in device settings
-- Restart the app after granting permission
+**Solution:** Use Chrome/Edge 96+ or Firefox 119+. Safari has limited OPFS support.
 
-### Low performance
-- Smaller models (like SmolLM2 360M) work better on mobile devices
-- Close other apps to free up memory
-- Use quantized models (Q4/Q8) for better performance
+### "Microphone Access Denied"
 
-## Support
+**Solution:**
+1. Check browser permissions settings
+2. Ensure you're using HTTPS or localhost
+3. Grant microphone permission when prompted
 
-- **GitHub Issues**: [Report bugs](https://github.com/RunanywhereAI/runanywhere-sdks/issues)
-- **Email**: san@runanywhere.ai
-- **Documentation**: [runanywhere.ai](https://runanywhere.ai)
+### Models Not Downloading
+
+**Solution:**
+1. Check internet connection
+2. Clear browser cache and reload
+3. Check browser console for errors
+4. Ensure ~500MB free disk space
+
+### Performance Issues
+
+**Solution:**
+1. Close other browser tabs
+2. Ensure 4GB+ RAM available
+3. Check if Cross-Origin Isolation is working (see browser console)
+4. Try a shorter recording duration
+
+### Transcription Errors
+
+**Solution:**
+1. Speak clearly and avoid background noise
+2. Use an external microphone for better quality
+3. Keep recordings under 15 minutes for best results
+4. Ensure proper audio input device selected
+
+### Summary Generation Fails
+
+**Solution:**
+1. Ensure transcript is not empty
+2. Try with a longer/more substantial transcript
+3. Check browser console for errors
+4. Verify LLM model loaded correctly
+
+## Privacy & Security
+
+### Data Privacy
+
+- ✅ **All processing is local:** Audio, transcripts, and summaries never leave your device
+- ✅ **No API keys required:** No cloud services involved
+- ✅ **No telemetry:** The app doesn't track or report usage
+- ✅ **No external requests:** After model download, zero network activity
+- ✅ **Sandboxed storage:** Models stored in browser's OPFS (isolated per origin)
+
+### Security Features
+
+- 🔒 Cross-Origin Isolation for enhanced security
+- 🔒 HTTPS recommended for production deployment
+- 🔒 No data collection or analytics
+- 🔒 No cookies or tracking
+
+## Deployment
+
+### Deploy to Vercel
+
+1. Install Vercel CLI: `npm i -g vercel`
+2. Run: `vercel`
+3. Configure headers in `vercel.json`:
+
+```json
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
+        { "key": "Cross-Origin-Embedder-Policy", "value": "require-corp" }
+      ]
+    }
+  ]
+}
+```
+
+### Deploy to Netlify
+
+1. Build: `npm run build`
+2. Deploy `dist/` folder
+3. Add `netlify.toml`:
+
+```toml
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cross-Origin-Opener-Policy = "same-origin"
+    Cross-Origin-Embedder-Policy = "require-corp"
+```
+
+### Deploy to GitHub Pages
+
+**Note:** GitHub Pages doesn't support custom headers. Use Vercel or Netlify instead for full functionality.
+
+## Development
+
+### Running in Development Mode
+
+```bash
+npm run dev
+```
+
+Features:
+- Hot module reloading
+- Source maps for debugging
+- COOP/COEP headers automatically configured
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+Outputs optimized bundle to `dist/`:
+- Minified JavaScript
+- Optimized CSS
+- Proper WASM handling
+- Source maps
+
+### Testing Changes
+
+1. Make changes to `script.js`, `style.css`, or `index.html`
+2. Vite automatically reloads the browser
+3. Check browser console for errors
+4. Test with actual microphone input
+
+## Technical Details
+
+### Audio Processing Pipeline
+
+```
+Microphone → MediaRecorder → Blob → 
+AudioContext → AudioBuffer → Float32Array (16kHz mono) →
+RunAnywhere STT → Transcript Text
+```
+
+### Audio Conversion
+
+The app automatically:
+- Converts stereo to mono (averages channels)
+- Resamples to 16kHz (required for Whisper)
+- Handles various input formats (webm, ogg, etc.)
+
+### Model Management
+
+Models are:
+1. Downloaded from HuggingFace
+2. Stored in browser OPFS
+3. Loaded into memory on app start
+4. Persisted across sessions
+
+### LLM Prompt Engineering
+
+The summarization prompt is structured to:
+1. Request a concise 2-3 sentence summary
+2. Extract action items in bullet format
+3. Include responsible parties when mentioned
+4. Follow a consistent format for parsing
+
+## Known Limitations
+
+- **Maximum Recording:** 30 minutes (configurable)
+- **Model Size:** ~425MB total download
+- **Browser Support:** Best on Chrome/Edge 120+
+- **Memory Usage:** ~2GB RAM minimum
+- **Audio Quality:** Depends on microphone and environment
+- **Accuracy:** Whisper-tiny is fast but less accurate than larger models
+
+## Future Enhancements
+
+Potential improvements:
+- [ ] Support for larger Whisper models (better accuracy)
+- [ ] Real-time streaming transcription
+- [ ] Multiple language support
+- [ ] Speaker diarization (identify different speakers)
+- [ ] Cloud backup option (opt-in)
+- [ ] Export to PDF/Word formats
+- [ ] Meeting template customization
+
+## Resources
+
+- [RunAnywhere Web SDK Documentation](https://docs.runanywhere.ai/web/introduction)
+- [Whisper Models](https://github.com/openai/whisper)
+- [Qwen2.5 Models](https://huggingface.co/Qwen)
+- [OPFS Documentation](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system)
 
 ## License
 
-This starter app is provided under the MIT License. The RunAnywhere SDK is licensed under the [RunAnywhere License](https://runanywhere.ai/license).
+MIT License - See LICENSE file for details
 
-For commercial licensing inquiries, contact: san@runanywhere.ai
+## Support
+
+For issues or questions:
+1. Check this README's troubleshooting section
+2. Review browser console for error messages
+3. Ensure system requirements are met
+4. Check RunAnywhere SDK documentation
+
+## Acknowledgments
+
+- **RunAnywhere** for the excellent on-device AI SDK
+- **OpenAI Whisper** for the speech-to-text models
+- **Qwen Team** for the efficient LLM models
+- **Modern browsers** for enabling powerful web applications
+
+---
+
+**Built with ❤️ for privacy-conscious users who value on-device AI processing.**

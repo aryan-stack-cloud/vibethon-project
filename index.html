@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Fully offline meeting assistant with on-device AI transcription and summarization. Your data never leaves your device.">
+  <title>Offline Meeting Assistant</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Main Container -->
+  <div class="container">
+    
+    <!-- Header -->
+    <header class="header">
+      <h1 class="title">Offline Meeting Assistant</h1>
+      <p class="subtitle">Private, on-device AI transcription and summarization</p>
+    </header>
+
+    <!-- Control Panel -->
+    <section class="panel control-panel" id="controlPanel">
+      <h2 class="panel-title">🎤 Control Panel</h2>
+      <div class="panel-content">
+        
+        <!-- Status Indicators -->
+        <div class="status-container">
+          <div class="status-item">
+            <span class="status-label">Status:</span>
+            <span class="status-value" id="statusValue">
+              <span class="status-indicator" id="statusIndicator"></span>
+              <span id="statusText">Initializing...</span>
+            </span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Models:</span>
+            <span class="status-value" id="modelsStatus">
+              <span class="loading-spinner"></span>
+              <span id="modelsText">Loading...</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Model Download Progress (Hidden by default) -->
+        <div class="progress-container hidden" id="downloadProgress">
+          <div class="progress-item">
+            <div class="progress-header">
+              <span class="progress-label" id="sttModelLabel">STT Model (Whisper-tiny):</span>
+              <span class="progress-percent" id="sttProgress">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-bar-fill" id="sttProgressBar"></div>
+            </div>
+            <div class="progress-size" id="sttSize">0 MB / 75 MB</div>
+          </div>
+          
+          <div class="progress-item">
+            <div class="progress-header">
+              <span class="progress-label" id="llmModelLabel">LLM Model (Qwen2.5-0.5B):</span>
+              <span class="progress-percent" id="llmProgress">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-bar-fill" id="llmProgressBar"></div>
+            </div>
+            <div class="progress-size" id="llmSize">0 MB / 350 MB</div>
+          </div>
+          
+          <p class="progress-note">First-time setup. Models will be cached for offline use.</p>
+        </div>
+
+        <!-- Recording Controls -->
+        <div class="controls-container" id="controlsContainer">
+          <button class="btn btn-primary btn-large" id="recordButton" disabled>
+            <span class="btn-icon" id="recordIcon">🎙️</span>
+            <span class="btn-text" id="recordText">Initializing...</span>
+          </button>
+          
+          <!-- Duration Display (Hidden by default) -->
+          <div class="duration-container hidden" id="durationContainer">
+            <span class="duration-label">Duration:</span>
+            <span class="duration-value">
+              <span id="currentDuration">00:00:00</span>
+              <span class="duration-separator">/</span>
+              <span class="duration-max">30:00:00</span>
+            </span>
+            <div class="duration-bar">
+              <div class="duration-bar-fill" id="durationBar"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons (Hidden by default, shown after completion) -->
+        <div class="action-buttons hidden" id="actionButtons">
+          <button class="btn btn-secondary" id="newRecordingButton">
+            <span class="btn-icon">🎙️</span>
+            <span class="btn-text">New Recording</span>
+          </button>
+          <button class="btn btn-secondary" id="saveResultsButton">
+            <span class="btn-icon">💾</span>
+            <span class="btn-text">Save Results</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Transcript Section -->
+    <section class="panel transcript-panel" id="transcriptPanel">
+      <div class="panel-header">
+        <h2 class="panel-title">📝 Transcript</h2>
+        <button class="btn btn-icon-only copy-btn hidden" id="copyTranscriptBtn" title="Copy transcript to clipboard">
+          📋
+        </button>
+      </div>
+      <div class="panel-content">
+        <div class="placeholder" id="transcriptPlaceholder">
+          <p>Transcript will appear here after recording...</p>
+        </div>
+        <div class="transcript-content hidden" id="transcriptContent"></div>
+      </div>
+    </section>
+
+    <!-- Summary & Action Items Section -->
+    <section class="panel summary-panel" id="summaryPanel">
+      <div class="panel-header">
+        <h2 class="panel-title">✨ Summary & Action Items</h2>
+        <button class="btn btn-icon-only copy-btn hidden" id="copySummaryBtn" title="Copy summary and action items to clipboard">
+          📋
+        </button>
+      </div>
+      <div class="panel-content">
+        <div class="placeholder" id="summaryPlaceholder">
+          <p>Summary and action items will appear here after transcription...</p>
+        </div>
+        <div class="summary-content hidden" id="summaryContent">
+          <div class="summary-section">
+            <h3 class="summary-heading">Summary:</h3>
+            <p class="summary-text" id="summaryText"></p>
+          </div>
+          <div class="summary-section">
+            <h3 class="summary-heading">Action Items:</h3>
+            <ul class="action-items-list" id="actionItemsList"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p class="footer-text">
+        🔒 <strong>100% Private:</strong> All processing happens on your device. No data ever leaves your browser.
+      </p>
+    </footer>
+
+  </div>
+
+  <!-- Error Modal (Hidden by default) -->
+  <div class="modal hidden" id="errorModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">❌ Error</h3>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-message" id="errorMessage"></p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="modalOkButton">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification (Hidden by default) -->
+  <div class="toast hidden" id="toast">
+    <span class="toast-icon" id="toastIcon">✓</span>
+    <span class="toast-message" id="toastMessage"></span>
+  </div>
+
+  <!-- Load the main script as a module -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>
